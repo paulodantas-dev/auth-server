@@ -4,7 +4,7 @@ import bcrypt from 'bcrypt';
 import jwt, { JwtPayload } from 'jsonwebtoken';
 
 import User from '../models/User';
-import { createAccessToken, createRefreshToken } from '../utils/token';
+import { createAccessToken } from '../utils/token';
 
 const authController = {
   register: async (req: Request, res: Response) => {
@@ -33,18 +33,10 @@ const authController = {
       });
 
       const access_token = createAccessToken({ id: userDB._id });
-      const refresh_token = createRefreshToken({ id: userDB._id });
-
-      res.cookie('refreshtoken', refresh_token, {
-        httpOnly: true,
-        path: 'api/refresh_token',
-        expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 30), // 30days
-      });
 
       const newUser = await userDB.save();
 
       res.status(200).json({
-        success: true,
         access_token,
         user: newUser,
       });
@@ -63,16 +55,8 @@ const authController = {
       if (!isMatch) return res.status(400).json({ error: 'Password is incorrect.' });
 
       const access_token = createAccessToken({ id: user._id });
-      const refresh_token = createRefreshToken({ id: user._id });
-
-      res.cookie('refreshtoken', refresh_token, {
-        httpOnly: true,
-        path: 'api/refresh_token',
-        expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 30), // 30days
-      });
 
       res.status(200).json({
-        success: true,
         access_token,
         user,
       });
@@ -80,31 +64,20 @@ const authController = {
       return res.status(500).json({ error });
     }
   },
-  logout: async (_req: Request, res: Response) => {
-    try {
-      res.clearCookie('refreshtoken', {
-        path: 'api/refresh_token',
-      });
-      return res.status(200).json({ success: true });
-    } catch (error) {
-      return res.status(500).json({ error });
-    }
-  },
   generateAccessToken: async (req: Request, res: Response) => {
     try {
-      const rf_token = req.headers.cookie?.split('=')[1];
-      if (!rf_token) return res.status(400).json({ error: 'Token doenst exist.' });
+      const { token } = req.body;
+      if (!token) return res.status(400).json({ error: 'Token doenst exist.' });
 
-      const resultToken = jwt.verify(rf_token, process.env.REFRESH_TOKEN_SECRET) as JwtPayload;
-      if (!resultToken) return res.status(400).json({ error: 'invalid token.' });
+      const verifyToken = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET) as JwtPayload;
+      if (!verifyToken) return res.status(400).json({ error: 'invalid token.' });
 
-      const user = await User.findById(resultToken.id).select('-password');
+      const user = await User.findById(verifyToken.id).select('-password');
       if (!user) return res.status(400).json({ error: 'This does not exist.' });
 
-      const access_token = createAccessToken({ id: resultToken.id });
+      const access_token = createAccessToken({ id: verifyToken.id });
 
       res.status(200).json({
-        success: true,
         access_token,
         user,
       });
