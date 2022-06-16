@@ -1,12 +1,17 @@
 {
-  "Openapi": "3.0.0",
+  "openapi": "3.0.3",
   "version": "1.0.0",
   "info": {
-    "Title": "Authentication API",
-    "description": "API REST with LOGOUT, SIGNGUP, SIGNIN and REFRESH_TOKEN",
+    "version": "1.0.0",
+    "title": "auth-api",
+    "description": "API REST for authentication",
     "contact": {
-      "name": "Paulo Dantas",
+      "name": "paulodantasbjr@gmail.com",
       "email": "paulodantasbjr@gmail.com"
+    },
+    "license": {
+      "name": "MIT",
+      "url": "https://opensource.org/licenses/MIT"
     }
   }
 }
