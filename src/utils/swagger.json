@@ -1,0 +1,12 @@
+{
+  "Openapi": "3.0.0",
+  "version": "1.0.0",
+  "info": {
+    "Title": "Authentication API",
+    "description": "API REST with LOGOUT, SIGNGUP, SIGNIN and REFRESH_TOKEN",
+    "contact": {
+      "name": "Paulo Dantas",
+      "email": "paulodantasbjr@gmail.com"
+    }
+  }
+}

@@ -4,7 +4,7 @@ import bcrypt from 'bcrypt';
 import jwt, { JwtPayload } from 'jsonwebtoken';
 
 import User from '../models/User';
-import { createAccessToken } from '../utils/token';
+import { createAccessToken, createRefreshToken } from '../utils/token';
 
 const authController = {
   register: async (req: Request, res: Response) => {
@@ -25,20 +25,27 @@ const authController = {
       const salt = await bcrypt.genSalt(10);
       const passwordHash = await bcrypt.hash(password, salt);
 
-      const userDB = new User({
+      const newUser = new User({
         fullname,
         username: newUserName,
         email,
         password: passwordHash,
       });
 
-      const access_token = createAccessToken({ id: userDB._id });
+      const access_token = createAccessToken({ id: newUser._id });
+      const refresh_token = createRefreshToken({ id: newUser._id });
 
-      const newUser = await userDB.save();
+      res.cookie('refreshtoken', refresh_token, {
+        httpOnly: true,
+        path: 'api/refresh_token',
+        maxAge: 30 * 24 * 60 * 60 * 1000, // 30days
+      });
+
+      const user = await newUser.save();
 
       res.status(200).json({
         access_token,
-        user: newUser,
+        user,
       });
     } catch (error) {
       return res.status(500).json({ error });
@@ -55,6 +62,13 @@ const authController = {
       if (!isMatch) return res.status(400).json({ error: 'Password is incorrect.' });
 
       const access_token = createAccessToken({ id: user._id });
+      const refresh_token = createRefreshToken({ id: user._id });
+
+      res.cookie('refreshtoken', refresh_token, {
+        httpOnly: true,
+        path: 'api/refresh_token',
+        maxAge: 30 * 24 * 60 * 60 * 1000, // 30days
+      });
 
       res.status(200).json({
         access_token,
@@ -64,20 +78,28 @@ const authController = {
       return res.status(500).json({ error });
     }
   },
+  logout: async (_req: Request, res: Response) => {
+    try {
+      res.clearCookie('refreshtoken', { path: 'api/refresh_token' });
+      return res.json({ success: 'Logged out!' });
+    } catch (error) {
+      return res.status(500).json({ error });
+    }
+  },
   generateAccessToken: async (req: Request, res: Response) => {
     try {
-      const { token } = req.body;
-      if (!token) return res.status(400).json({ error: 'Token doenst exist.' });
+      const rf_token = req.cookies.refreshtoken;
+      if (!rf_token) return res.status(400).json({ error: 'Please login now.' });
 
-      const verifyToken = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET) as JwtPayload;
-      if (!verifyToken) return res.status(400).json({ error: 'invalid token.' });
+      const resultToken = jwt.verify(rf_token, process.env.REFRESH_TOKEN_SECRET) as JwtPayload;
+      if (!resultToken) return res.status(400).json({ error: 'Token invalid.' });
 
-      const user = await User.findById(verifyToken.id).select('-password');
+      const user = await User.findById(resultToken.id);
       if (!user) return res.status(400).json({ error: 'This does not exist.' });
 
-      const access_token = createAccessToken({ id: verifyToken.id });
+      const access_token = createAccessToken({ id: user._id });
 
-      res.status(200).json({
+      res.json({
         access_token,
         user,
       });
