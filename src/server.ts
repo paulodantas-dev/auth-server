@@ -19,7 +19,7 @@ app.use(bodyParser.urlencoded({ limit: '30mb', extended: true }));
 app.use(cors({ credentials: true, origin: true }));
 app.use(cookieParser());
 
-app.use('/', swaggerUI.serve, swaggerUI.setup(swaggerDocument));
+app.use('/doc', swaggerUI.serve, swaggerUI.setup(swaggerDocument));
 app.use('/api', authRouter);
 
 export default app;
