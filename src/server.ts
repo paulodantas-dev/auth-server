@@ -1,4 +1,4 @@
-import express, { Request, Response, NextFunction } from 'express';
+import express, { Request, Response } from 'express';
 
 import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
@@ -14,8 +14,6 @@ const app = express();
 dotenv.config();
 
 app.use(express.json());
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded());
 app.use(cors());
 app.use(cookieParser());
 
