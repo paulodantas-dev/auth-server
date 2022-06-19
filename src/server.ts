@@ -14,7 +14,23 @@ const app = express();
 dotenv.config();
 
 app.use(express.json());
-app.use(cors());
+app.use(
+  cors({
+    credentials: true,
+    origin: 'https://auth-app-node.herokuapp.com',
+    methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE'],
+    allowedHeaders: [
+      'Content-Type',
+      'Accept',
+      'X-Requested-With',
+      'Access-Control-Allow-Origin',
+      'Access-Control-Allow-Credentials',
+      'Access-Control-Allow-Methods',
+      'Access-Control-Allow-Headers',
+      'Access-Control-Max-Age',
+    ],
+  })
+);
 app.use(cookieParser());
 
 app.get('/', (_req: Request, res: Response) => {

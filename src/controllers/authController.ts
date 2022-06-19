@@ -39,6 +39,8 @@ const authController = {
       Cookie.set('refreshtoken', refresh_token, {
         expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // 30days
         path: '/api/refresh_token',
+        sameSite: 'None',
+        secure: true,
       });
 
       const user = await newUser.save();
@@ -67,6 +69,8 @@ const authController = {
       Cookie.set('refreshtoken', refresh_token, {
         expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // 30days
         path: '/api/refresh_token',
+        sameSite: 'None',
+        secure: true,
       });
 
       res.status(200).json({
@@ -79,7 +83,11 @@ const authController = {
   },
   logout: async (_req: Request, res: Response) => {
     try {
-      Cookie.remove('refreshtoken', { path: '/api/refresh_token' });
+      Cookie.remove('refreshtoken', {
+        path: '/api/refresh_token',
+        sameSite: 'None',
+        secure: true,
+      });
       return res.json({ success: 'Logged out!' });
     } catch (error) {
       return res.status(500).json({ error });
