@@ -39,8 +39,6 @@ const authController = {
         httpOnly: true,
         path: '/api/refresh_token',
         maxAge: 30 * 24 * 60 * 60 * 1000, // 30days
-        sameSite: 'none',
-        secure: true,
       });
       const user = await newUser.save();
 
@@ -69,8 +67,6 @@ const authController = {
         httpOnly: true,
         path: '/api/refresh_token',
         maxAge: 30 * 24 * 60 * 60 * 1000, // 30days
-        sameSite: 'none',
-        secure: true,
       });
 
       res.status(200).json({
@@ -85,8 +81,6 @@ const authController = {
     try {
       res.clearCookie('refreshtoken', {
         path: '/api/refresh_token',
-        sameSite: 'none',
-        secure: true,
       });
       return res.json({ success: 'Logged out!' });
     } catch (error) {
