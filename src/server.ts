@@ -1,4 +1,4 @@
-import express from 'express';
+import express, { Request, Response } from 'express';
 
 import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
@@ -18,6 +18,10 @@ app.use(bodyParser.json({ limit: '30mb' }));
 app.use(bodyParser.urlencoded({ limit: '30mb', extended: true }));
 app.use(cors({ credentials: true, origin: true }));
 app.use(cookieParser());
+
+app.get('/', (_req: Request, res: Response) => {
+  res.redirect('/doc');
+});
 
 app.use('/doc', swaggerUI.serve, swaggerUI.setup(swaggerDocument));
 app.use('/api', authRouter);
