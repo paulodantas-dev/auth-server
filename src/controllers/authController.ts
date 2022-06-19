@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 
 import bcrypt from 'bcrypt';
+import Cookie from 'js-cookie';
 import jwt, { JwtPayload } from 'jsonwebtoken';
 
 import User from '../models/User';
@@ -35,11 +36,11 @@ const authController = {
       const access_token = createAccessToken({ id: newUser._id });
       const refresh_token = createRefreshToken({ id: newUser._id });
 
-      res.cookie('refreshtoken', refresh_token, {
-        httpOnly: true,
+      Cookie.set('refreshtoken', refresh_token, {
+        expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // 30days
         path: '/api/refresh_token',
-        maxAge: 30 * 24 * 60 * 60 * 1000, // 30days
       });
+
       const user = await newUser.save();
 
       res.status(200).json({
@@ -63,10 +64,9 @@ const authController = {
       const access_token = createAccessToken({ id: user._id });
       const refresh_token = createRefreshToken({ id: user._id });
 
-      res.cookie('refreshtoken', refresh_token, {
-        httpOnly: true,
+      Cookie.set('refreshtoken', refresh_token, {
+        expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // 30days
         path: '/api/refresh_token',
-        maxAge: 30 * 24 * 60 * 60 * 1000, // 30days
       });
 
       res.status(200).json({
@@ -79,9 +79,7 @@ const authController = {
   },
   logout: async (_req: Request, res: Response) => {
     try {
-      res.clearCookie('refreshtoken', {
-        path: '/api/refresh_token',
-      });
+      Cookie.remove('refreshtoken', { path: '/api/refresh_token' });
       return res.json({ success: 'Logged out!' });
     } catch (error) {
       return res.status(500).json({ error });
@@ -89,10 +87,10 @@ const authController = {
   },
   generateAccessToken: async (req: Request, res: Response) => {
     try {
-      const rf_token = req.cookies.refreshtoken;
-      if (!rf_token) return res.status(400).json({ error: 'Please login now.' });
+      const getToken = Cookie.get('refreshtoken');
+      if (!getToken) return res.status(400).json({ error: 'Please login now.' });
 
-      const resultToken = jwt.verify(rf_token, process.env.REFRESH_TOKEN_SECRET) as JwtPayload;
+      const resultToken = jwt.verify(getToken, process.env.REFRESH_TOKEN_SECRET) as JwtPayload;
       if (!resultToken) return res.status(401).json({ error: 'Token invalid.' });
 
       const user = await User.findById(resultToken.id);
