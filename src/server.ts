@@ -1,4 +1,4 @@
-import express, { Request, Response } from 'express';
+import express, { Request, Response, NextFunction } from 'express';
 
 import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
@@ -16,8 +16,19 @@ dotenv.config();
 app.use(express.json());
 app.use(bodyParser.json({ limit: '30mb' }));
 app.use(bodyParser.urlencoded({ limit: '30mb', extended: true }));
-app.use(cors({ credentials: true, origin: true }));
+app.use(cors({ credentials: true, origin: '*' }));
 app.use(cookieParser());
+
+app.use((req: Request, res: Response, next: NextFunction) => {
+  res.header('Access-Control-Allow-Credentials', 'true');
+  res.header('Access-Control-Allow-Origin', req.headers.origin);
+  res.header('Access-Control-Allow-Methods', '*');
+  res.header(
+    'Access-Control-Allow-Headers',
+    'X-Requested-With, X-HTTP-Method-Override, Content-Type, Accept'
+  );
+  next();
+});
 
 app.get('/', (_req: Request, res: Response) => {
   res.redirect('/api/doc');

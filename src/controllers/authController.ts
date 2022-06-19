@@ -37,7 +37,6 @@ const authController = {
 
       res.cookie('refreshtoken', refresh_token, {
         httpOnly: true,
-        domain: process.env.NODE_ENV === 'production' ? '.herokuapp.com' : 'localhost',
         path: '/api/refresh_token',
         maxAge: 30 * 24 * 60 * 60 * 1000, // 30days
         sameSite: 'none',
@@ -68,7 +67,6 @@ const authController = {
 
       res.cookie('refreshtoken', refresh_token, {
         httpOnly: true,
-        domain: process.env.NODE_ENV === 'production' ? '.herokuapp.com' : 'localhost',
         path: '/api/refresh_token',
         maxAge: 30 * 24 * 60 * 60 * 1000, // 30days
         sameSite: 'none',
@@ -85,7 +83,11 @@ const authController = {
   },
   logout: async (_req: Request, res: Response) => {
     try {
-      res.clearCookie('refreshtoken', { path: '/api/refresh_token' });
+      res.clearCookie('refreshtoken', {
+        path: '/api/refresh_token',
+        sameSite: 'none',
+        secure: true,
+      });
       return res.json({ success: 'Logged out!' });
     } catch (error) {
       return res.status(500).json({ error });
