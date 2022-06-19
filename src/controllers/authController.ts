@@ -55,7 +55,7 @@ const authController = {
     try {
       const { email, password } = req.body;
 
-      const user = await User.findOne({ email }).select('+password');
+      const user = await User.findOne({ email });
       if (!user) return res.status(400).json({ error: 'This email does not exist.' });
 
       const isMatch = await bcrypt.compare(password, user.password);
