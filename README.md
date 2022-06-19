@@ -1,6 +1,8 @@
 # auth-server-api
 
-APP - https://auth-app-node.herokuapp.com
+API - https://auth-app-node.herokuapp.com
+
+APP - Building
 
 ## 🛠 Skills
 
@@ -21,14 +23,15 @@ Feel free to take a look at my latest projects on my [portifolio page](https://p
 
 **Database:** MongoDB, Mongoose
 
-## Installation
+## Installation / Execute
 
-How to install the project
+How to install and execute the project in LOCALHOST
 
 ```bash
     git clone https://github.com/paulodantas-dev/auth-server.git
     cd auth-server
-    yarn or npm install
+    yarn / npm install
+    yarn dev / npm run dev
 ```
 
 ## Environment Variables
@@ -50,7 +53,7 @@ To run this project, you will need to add the following environment variables to
 To deploy this project, run
 
 ```bash
-  npm run build
+  yarn build / npm run build
 ```
 
 ## Lib
@@ -64,6 +67,7 @@ To deploy this project, run
 - [jsonwebtoken](https://github.com/auth0/node-jsonwebtoken#readme)
 - [mongoose](https://mongoosejs.com/)
 - [swagger-ui-express](https://github.com/scottie1984/swagger-ui-express)
+- [typescript](https://www.typescriptlang.org/)
 
 ## API Documentation
 
