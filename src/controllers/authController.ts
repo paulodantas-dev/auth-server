@@ -37,7 +37,7 @@ const authController = {
 
       res.cookie('refreshtoken', refresh_token, {
         httpOnly: true,
-        path: 'api/refresh_token',
+        path: '/api/refresh_token',
         maxAge: 30 * 24 * 60 * 60 * 1000, // 30days
       });
 
@@ -66,7 +66,7 @@ const authController = {
 
       res.cookie('refreshtoken', refresh_token, {
         httpOnly: true,
-        path: 'api/refresh_token',
+        path: '/api/refresh_token',
         maxAge: 30 * 24 * 60 * 60 * 1000, // 30days
       });
 
@@ -80,7 +80,7 @@ const authController = {
   },
   logout: async (_req: Request, res: Response) => {
     try {
-      res.clearCookie('refreshtoken', { path: 'api/refresh_token' });
+      res.clearCookie('refreshtoken', { path: '/api/refresh_token' });
       return res.json({ success: 'Logged out!' });
     } catch (error) {
       return res.status(500).json({ error });
