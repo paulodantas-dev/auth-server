@@ -16,7 +16,7 @@ dotenv.config();
 app.use(express.json());
 app.use(bodyParser.json({ limit: '30mb' }));
 app.use(bodyParser.urlencoded({ limit: '30mb', extended: true }));
-app.use(cors({ credentials: true, origin: true }));
+app.use(cors({ credentials: true }));
 app.use(cookieParser());
 
 app.get('/', (_req: Request, res: Response) => {
