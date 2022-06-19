@@ -2,16 +2,250 @@
   "openapi": "3.0.3",
   "version": "1.0.0",
   "info": {
-    "version": "1.0.0",
-    "title": "auth-api",
-    "description": "API REST for authentication",
+    "title": "Auth-User-API",
+    "description": "Authentication user API",
     "contact": {
-      "name": "paulodantasbjr@gmail.com",
+      "name": "Paulo Dantas",
+      "url": "https://github.com/paulodantas-dev",
       "email": "paulodantasbjr@gmail.com"
     },
-    "license": {
-      "name": "MIT",
-      "url": "https://opensource.org/licenses/MIT"
+    "version": "1.0.1"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:5000/",
+      "description": "Development server"
+    },
+    {
+      "url": "https://auth-app-node.herokuapp.com",
+      "description": "Production server"
+    }
+  ],
+  "paths": {
+    "/api/login": {
+      "post": {
+        "description": "Returns user, token and sets cookie for user with refresh token",
+        "summary": "Authenticate user",
+        "operationId": "login",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Login"
+              },
+              "examples": {
+                "login": {
+                  "value": {
+                    "email": "paulodantasbjr@gmail.com",
+                    "password": "12345678"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "login response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "$ref": "#/components/schemas/Response"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "This email does not exist."
+          },
+          "401": {
+            "description": "Password is incorrect."
+          },
+          "500": {
+            "description": "Internal server error."
+          }
+        }
+      }
+    },
+    "/api/register": {
+      "post": {
+        "description": "Returns user, token and sets cookie for user with refresh token",
+        "summary": "Authenticate user",
+        "operationId": "register",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Register"
+              },
+              "examples": {
+                "register": {
+                  "value": {
+                    "fullname": "Paulo Dantas",
+                    "username": "paulodantas",
+                    "email": "paulodantasbjr@gmail.com",
+                    "password": "12345678"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "register response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "$ref": "#/components/schemas/Response"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "his user name already exists."
+          },
+          "401": {
+            "description": "Password must be at least 8 characters."
+          },
+          "403": {
+            "description": "This email already exists."
+          },
+          "500": {
+            "description": "Internal server error."
+          }
+        }
+      }
+    },
+    "/api/refresh_token": {
+      "post": {
+        "description": "Returns user and token",
+        "summary": "Authenticate user",
+        "operationId": "refresh_token",
+        "responses": {
+          "200": {
+            "description": "refresh_token response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "$ref": "#/components/schemas/Response"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Please login now."
+          },
+          "401": {
+            "description": "Token invalid."
+          },
+          "404": {
+            "description": "This does not exist."
+          },
+          "500": {
+            "description": "Internal server error."
+          }
+        }
+      }
+    },
+    "/api/logout": {
+      "post": {
+        "description": "Returns msg of logout",
+        "summary": "Authenticate user",
+        "operationId": "logout",
+        "responses": {
+          "200": {
+            "description": "logout response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "$ref": "#/components/schemas/LogoutResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error."
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Login": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "format": "email"
+          },
+          "password": {
+            "type": "string",
+            "minLength": 8
+          }
+        },
+        "required": ["email", "password"]
+      },
+      "Register": {
+        "type": "object",
+        "properties": {
+          "fullname": {
+            "type": "string"
+          },
+          "username": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string",
+            "format": "email"
+          },
+          "password": {
+            "type": "string",
+            "minLength": 8
+          }
+        },
+        "required": ["email", "password"]
+      },
+      "Response": {
+        "type": "object",
+        "properties": {
+          "token": {
+            "type": "string"
+          },
+          "user": {
+            "type": "object",
+            "properties": {
+              "_id": {
+                "type": "string"
+              },
+              "fullname": {
+                "type": "string"
+              },
+              "username": {
+                "type": "string"
+              },
+              "email": {
+                "type": "string",
+                "format": "email"
+              }
+            }
+          }
+        },
+        "required": ["token", "user"]
+      },
+      "LogoutResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "string"
+          }
+        }
+      }
     }
   }
 }

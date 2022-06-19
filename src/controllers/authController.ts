@@ -17,10 +17,10 @@ const authController = {
       if (findUserName) return res.status(400).json({ error: 'This user name already exists.' });
 
       const findUserEmail = await User.findOne({ email });
-      if (findUserEmail) return res.status(400).json({ error: 'This email already exists.' });
+      if (findUserEmail) return res.status(403).json({ error: 'This email already exists.' });
 
-      if (password.length < 6)
-        return res.status(400).json({ error: 'Password must be at least 6 characters.' });
+      if (password.length < 8)
+        return res.status(401).json({ error: 'Password must be at least 8 characters.' });
 
       const salt = await bcrypt.genSalt(10);
       const passwordHash = await bcrypt.hash(password, salt);
@@ -55,11 +55,11 @@ const authController = {
     try {
       const { email, password } = req.body;
 
-      const user = await User.findOne({ email });
+      const user = await User.findOne({ email }).select('+password');
       if (!user) return res.status(400).json({ error: 'This email does not exist.' });
 
       const isMatch = await bcrypt.compare(password, user.password);
-      if (!isMatch) return res.status(400).json({ error: 'Password is incorrect.' });
+      if (!isMatch) return res.status(401).json({ error: 'Password is incorrect.' });
 
       const access_token = createAccessToken({ id: user._id });
       const refresh_token = createRefreshToken({ id: user._id });
@@ -92,10 +92,10 @@ const authController = {
       if (!rf_token) return res.status(400).json({ error: 'Please login now.' });
 
       const resultToken = jwt.verify(rf_token, process.env.REFRESH_TOKEN_SECRET) as JwtPayload;
-      if (!resultToken) return res.status(400).json({ error: 'Token invalid.' });
+      if (!resultToken) return res.status(401).json({ error: 'Token invalid.' });
 
       const user = await User.findById(resultToken.id);
-      if (!user) return res.status(400).json({ error: 'This does not exist.' });
+      if (!user) return res.status(404).json({ error: 'This does not exist.' });
 
       const access_token = createAccessToken({ id: user._id });
 
