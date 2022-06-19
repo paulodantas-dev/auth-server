@@ -20,10 +20,10 @@ app.use(cors({ credentials: true, origin: true }));
 app.use(cookieParser());
 
 app.get('/', (_req: Request, res: Response) => {
-  res.redirect('/doc');
+  res.redirect('/api/doc');
 });
 
-app.use('/doc', swaggerUI.serve, swaggerUI.setup(swaggerDocument));
+app.use('/api/doc', swaggerUI.serve, swaggerUI.setup(swaggerDocument));
 app.use('/api', authRouter);
 
 export default app;
