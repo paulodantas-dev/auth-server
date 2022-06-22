@@ -14,21 +14,14 @@ const app = express();
 dotenv.config();
 
 app.use(express.json());
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false, limit: '50mb' }));
 app.use(
   cors({
     credentials: true,
-    origin: 'http://localhost:3000',
+    origin: '*',
     methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE'],
-    allowedHeaders: [
-      'Content-Type',
-      'Accept',
-      'X-Requested-With',
-      'Access-Control-Allow-Origin',
-      'Access-Control-Allow-Credentials',
-      'Access-Control-Allow-Methods',
-      'Access-Control-Allow-Headers',
-      'Access-Control-Max-Age',
-    ],
+    allowedHeaders: ['Content-Type', 'Accept', 'Authorization'],
   })
 );
 app.use(cookieParser());
