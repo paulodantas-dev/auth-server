@@ -29,8 +29,7 @@ app.all('*', (req: Request, res: Response) => {
   res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
   res.header(
     'Access-Control-Allow-Headers',
-    'X-Requested-With,content-type,Authorization ,Accept',
-    'Content-Type, Authorization, Content-Length, X-Requested-With'
+    'Content-Type, Authorization, Content-Length, X-Requested-With, Accept'
   );
 });
 

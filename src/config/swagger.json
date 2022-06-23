@@ -17,7 +17,7 @@
       "description": "Development server"
     },
     {
-      "url": "https://auth-app-node.herokuapp.com",
+      "url": "https://auth-auth-node.herokuapp.com",
       "description": "Production server"
     }
   ],
