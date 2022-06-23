@@ -1,6 +1,5 @@
 import express, { Request, Response } from 'express';
 
-import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import dotenv from 'dotenv';
@@ -14,16 +13,7 @@ const app = express();
 dotenv.config();
 
 app.use(express.json());
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false, limit: '50mb' }));
-app.use(
-  cors({
-    credentials: true,
-    origin: '*',
-    methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE'],
-    allowedHeaders: ['Content-Type', 'Accept', 'Authorization', 'Access-Control-Allow-Origin'],
-  })
-);
+app.use(cors());
 app.use(cookieParser());
 
 app.get('/', (_req: Request, res: Response) => {
