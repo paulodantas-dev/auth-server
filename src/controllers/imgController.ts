@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 
 import { v2 as cloudinary } from 'cloudinary';
 
-import { removeTmp } from '../utils/removeImgTemp';
+import { removeImgTmp } from '../utils/removeImgTemp';
 
 export interface IFile {
   tempFilePath: string;
@@ -32,7 +32,7 @@ export const imgController = {
         async (err, result) => {
           if (err) throw err;
 
-          removeTmp(file?.tempFilePath);
+          removeImgTmp(file?.tempFilePath);
 
           res.status(200).json({ url: result?.secure_url });
         }

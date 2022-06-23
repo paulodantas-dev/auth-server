@@ -25,9 +25,9 @@ export const sendEmail = async (to: string, url: string, txt: string) => {
   });
 
   const smtpTransport = nodemailer.createTransport({
+    port: 587,
     host: 'smtp.gmail.com',
     service: 'gmail',
-    port: 587,
     secure: true,
     auth: {
       type: 'OAuth2',
@@ -37,7 +37,7 @@ export const sendEmail = async (to: string, url: string, txt: string) => {
       refreshToken: process.env.MAILING_SERVICE_REFRESH_TOKEN,
       accessToken: token,
     },
-  });
+  } as nodemailer.TransportOptions);
 
   const mailOptions = {
     from: process.env.EMAIL_ADDRESS,

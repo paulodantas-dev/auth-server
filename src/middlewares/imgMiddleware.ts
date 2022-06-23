@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 
 import { IFile } from '../controllers/imgController';
-import { removeTmp } from '../utils/removeImgTemp';
+import { removeImgTmp } from '../utils/removeImgTemp';
 
 export const imgMiddleware = (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -11,12 +11,12 @@ export const imgMiddleware = (req: Request, res: Response, next: NextFunction) =
     const file = req.files.file as IFile;
 
     if (file?.size > 1024 * 1024) {
-      removeTmp(file?.tempFilePath);
+      removeImgTmp(file?.tempFilePath);
       return res.status(400).json({ error: 'Size too large.' });
     } // 1mb
 
     if (file?.mimetype !== 'image/jpeg' && file?.mimetype !== 'image/png') {
-      removeTmp(file?.tempFilePath);
+      removeImgTmp(file?.tempFilePath);
       return res
         .status(400)
         .json({ error: 'File format is incorrect only png or jpeg are acceptable.' });
