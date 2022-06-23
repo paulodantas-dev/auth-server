@@ -7,3 +7,7 @@ export const createAccessToken = (payload: string | object | Buffer) => {
 export const createRefreshToken = (payload: string | object | Buffer) => {
   return jwt.sign(payload, process.env.REFRESH_TOKEN_SECRET, { expiresIn: '30d' });
 };
+
+export const createActivationToken = (payload: string | object | Buffer) => {
+  return jwt.sign(payload, process.env.ACTIVATION_TOKEN_SECRET, { expiresIn: '5m' });
+};

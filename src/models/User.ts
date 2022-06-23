@@ -1,37 +1,38 @@
 import mongoose from 'mongoose';
 
 export interface IUser extends mongoose.Document {
-  fullname: string;
-  username: string;
+  name: string;
+  avatar: string;
   email: string;
   password: string;
+  role: number;
 }
 
 const userSchema = new mongoose.Schema<IUser>(
   {
-    fullname: {
+    name: {
       type: String,
-      required: true,
+      required: [true, 'Please enter your name!'],
       trim: true,
-      minlength: 6,
-      maxlength: 50,
     },
-    username: {
+    avatar: {
       type: String,
-      required: true,
-      trim: true,
-      maxlength: 25,
-      unique: true,
+      default:
+        'https://res.cloudinary.com/paulodantas/image/upload/v1655992674/mern-auth/avatar_bp058g.png',
     },
     email: {
       type: String,
-      required: true,
+      required: [true, 'Please enter your email!'],
       trim: true,
       unique: true,
     },
     password: {
       type: String,
       required: true,
+    },
+    role: {
+      type: Number,
+      default: 0,
     },
   },
   {
