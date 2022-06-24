@@ -13,11 +13,11 @@
   },
   "servers": [
     {
-      "url": "http://localhost:5000/",
+      "url": "http://localhost:5000",
       "description": "Development server"
     },
     {
-      "url": "https://auth-auth-node.herokuapp.com",
+      "url": "https://auth-app-node.herokuapp.com",
       "description": "Production server"
     }
   ],
@@ -25,7 +25,7 @@
     "/api/login": {
       "post": {
         "description": "Returns token and sets cookie for user with refresh token",
-        "summary": "Authenticate user",
+        "summary": "login router",
         "operationId": "login",
         "requestBody": {
           "content": {
@@ -71,7 +71,7 @@
     "/api/register": {
       "post": {
         "description": "Returns user, token and sets cookie for user with refresh token",
-        "summary": "Authenticate user",
+        "summary": "register router",
         "operationId": "register",
         "requestBody": {
           "content": {
@@ -118,7 +118,7 @@
     "/api/refresh_token": {
       "post": {
         "description": "Returns token",
-        "summary": "Authenticate user",
+        "summary": "refresh token router",
         "operationId": "refresh_token",
         "responses": {
           "200": {
@@ -150,7 +150,7 @@
     "/api/logout": {
       "post": {
         "description": "Returns msg of logout and clear cookie",
-        "summary": "Authenticate user",
+        "summary": "logout router",
         "operationId": "logout",
         "responses": {
           "200": {
