@@ -16,7 +16,11 @@ const app = express();
 dotenv.config();
 
 app.use(express.json());
-app.use(cors());
+app.use(
+  cors({
+    credentials: true,
+  })
+);
 app.use(cookieParser());
 app.use(
   fileUpload({
@@ -24,9 +28,9 @@ app.use(
   })
 );
 
-app.get('/', (_req: Request, res: Response) => {
-  res.redirect('/api/doc');
-});
+// app.get('/', (_req: Request, res: Response) => {
+//   res.redirect('/api/doc');
+// });
 
 app.use('/api', authRoute);
 app.use('/api/user', userRoute);
