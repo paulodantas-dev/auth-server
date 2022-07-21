@@ -24,9 +24,9 @@
   "paths": {
     "/api/login": {
       "post": {
+        "summary": "Login User",
         "description": "Returns token and sets cookie for user with refresh token",
-        "summary": "login router",
-        "operationId": "login",
+        "tags": ["auth"],
         "requestBody": {
           "content": {
             "application/json": {
@@ -36,7 +36,7 @@
               "examples": {
                 "login": {
                   "value": {
-                    "email": "paulodantasbjr@gmail.com",
+                    "email": "johndoe@email.com",
                     "password": "12345678"
                   }
                 }
@@ -51,7 +51,7 @@
               "application/json": {
                 "schema": {
                   "type": "object",
-                  "$ref": "#/components/schemas/Response"
+                  "$ref": "#/components/schemas/ResponseLogin"
                 }
               }
             }
@@ -70,9 +70,9 @@
     },
     "/api/register": {
       "post": {
-        "description": "Returns user, token and sets cookie for user with refresh token",
-        "summary": "register router",
-        "operationId": "register",
+        "summary": "Register User",
+        "description": "sending a confirmation email to the user email",
+        "tags": ["auth"],
         "requestBody": {
           "content": {
             "application/json": {
@@ -82,8 +82,8 @@
               "examples": {
                 "register": {
                   "value": {
-                    "name": "Paulo Dantas",
-                    "email": "paulodantasbjr@gmail.com",
+                    "name": "john doe",
+                    "email": "johndoe@email.com",
                     "password": "12345678"
                   }
                 }
@@ -98,7 +98,7 @@
               "application/json": {
                 "schema": {
                   "type": "object",
-                  "$ref": "#/components/schemas/Response"
+                  "$ref": "#/components/schemas/ResponseRegister"
                 }
               }
             }
@@ -115,11 +115,137 @@
         }
       }
     },
+    "/api/activate": {
+      "post": {
+        "summary": "Activate User",
+        "description": "save user in database",
+        "tags": ["auth"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ActivateRegister"
+              },
+              "examples": {
+                "register": {
+                  "value": {
+                    "activation_token": "token exemplo"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "activate response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "$ref": "#/components/schemas/ResponseActivate"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "This email already exists."
+          },
+          "500": {
+            "description": "Internal server error."
+          }
+        }
+      }
+    },
+    "/api/forgot-password": {
+      "post": {
+        "summary": "Forgot Password",
+        "description": "sending a change password to the user email",
+        "tags": ["auth"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ForgotPassword"
+              },
+              "examples": {
+                "register": {
+                  "value": {
+                    "email": "johndoe@email.com"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "forgot password response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "$ref": "#/components/schemas/ResponseForgotPassword"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "This email does not exist."
+          },
+          "500": {
+            "description": "Internal server error."
+          }
+        }
+      }
+    },
+    "/api/reset-password": {
+      "post": {
+        "summary": "Reset Password",
+        "description": "change password",
+        "tags": ["auth"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ResetPassword"
+              },
+              "examples": {
+                "register": {
+                  "value": {
+                    "password": "12345678"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "reset password response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "$ref": "#/components/schemas/ResponseResetPassword"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "This email does not exist."
+          },
+          "500": {
+            "description": "Internal server error."
+          }
+        }
+      }
+    },
     "/api/refresh_token": {
       "post": {
-        "description": "Returns token",
-        "summary": "refresh token router",
-        "operationId": "refresh_token",
+        "summary": "Refresh Token",
+        "description": "Returns token based on refresh token",
+        "tags": ["auth"],
         "responses": {
           "200": {
             "description": "refresh_token response",
@@ -127,7 +253,7 @@
               "application/json": {
                 "schema": {
                   "type": "object",
-                  "$ref": "#/components/schemas/Response"
+                  "$ref": "#/components/schemas/RefreshTokenResponse"
                 }
               }
             }
@@ -149,9 +275,9 @@
     },
     "/api/logout": {
       "post": {
-        "description": "Returns msg of logout and clear cookie",
-        "summary": "logout router",
-        "operationId": "logout",
+        "description": "Returns message of logout and clear cookie",
+        "summary": "Logout User",
+        "tags": ["auth"],
         "responses": {
           "200": {
             "description": "logout response",
@@ -187,6 +313,26 @@
         },
         "required": ["email", "password"]
       },
+      "ResetPassword": {
+        "type": "object",
+        "properties": {
+          "password": {
+            "type": "string",
+            "minLength": 8
+          }
+        },
+        "required": ["password"]
+      },
+      "ForgotPassword": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "format": "email"
+          }
+        },
+        "required": ["email"]
+      },
       "Register": {
         "type": "object",
         "properties": {
@@ -204,10 +350,51 @@
         },
         "required": ["email", "password", "name"]
       },
+      "ActivateRegister": {
+        "type": "object",
+        "properties": {
+          "activation_token": {
+            "type": "string"
+          }
+        },
+        "required": ["activation_token"]
+      },
+      "RefreshTokenResponse": {
+        "type": "object",
+        "properties": {
+          "access_token": {
+            "type": "string"
+          }
+        }
+      },
       "ResponseLogin": {
         "type": "object",
         "properties": {
           "access_token": {
+            "type": "string"
+          }
+        }
+      },
+      "ResponseResetPassword": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "string"
+          }
+        }
+      },
+      "ResponseActivate": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "string"
+          }
+        }
+      },
+      "ResponseForgotPassword": {
+        "type": "object",
+        "properties": {
+          "success": {
             "type": "string"
           }
         }
@@ -227,6 +414,12 @@
             "type": "string"
           }
         }
+      }
+    },
+    "securitySchemes": {
+      "basicAuth": {
+        "type": "http",
+        "scheme": "baisc"
       }
     }
   }

@@ -18,6 +18,7 @@ dotenv.config();
 app.use(express.json());
 app.use(
   cors({
+    origin: process.env.CLIENT_URL,
     credentials: true,
   })
 );
@@ -28,9 +29,19 @@ app.use(
   })
 );
 
-// app.get('/', (_req: Request, res: Response) => {
-//   res.redirect('/api/doc');
-// });
+app.use(function (req, res, next) {
+  res.header('Access-Control-Allow-Origin', process.env.CLIENT_URL);
+  res.header(
+    'Access-Control-Allow-Headers',
+    'Origin, X-Requested-With, Content-Type, Accept, Authorization'
+  );
+  res.header('Access-Control-Allow-Credentials', 'true');
+  next();
+});
+
+app.get('/', (_req: Request, res: Response) => {
+  res.redirect('/api/doc');
+});
 
 app.use('/api', authRoute);
 app.use('/api/user', userRoute);
