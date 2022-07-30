@@ -275,8 +275,8 @@
     },
     "/api/logout": {
       "post": {
-        "description": "Returns message of logout and clear cookie",
         "summary": "Logout User",
+        "description": "Returns message of logout and clear cookie",
         "tags": ["auth"],
         "responses": {
           "200": {
@@ -286,6 +286,244 @@
                 "schema": {
                   "type": "object",
                   "$ref": "#/components/schemas/LogoutResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error."
+          }
+        }
+      }
+    },
+    "/api/upload-avatar": {
+      "post": {
+        "summary": "Upload Avatar",
+        "description": "upload avatar",
+        "tags": ["image"],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "image/png": {
+              "schema": {
+                "$ref": "#/components/schemas/UploadAvatar"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "upload avatar response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "$ref": "#/components/schemas/UploadAvatarResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error."
+          }
+        }
+      }
+    },
+    "/api/user": {
+      "get": {
+        "summary": "Get One User",
+        "description": "Get your user",
+        "tags": ["user"],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Get your user",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "$ref": "#/components/schemas/GetUserResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "User not found."
+          },
+          "500": {
+            "description": "Internal server error."
+          }
+        }
+      }
+    },
+    "/api/user/all": {
+      "get": {
+        "summary": "Get all Users",
+        "description": "Get all users",
+        "tags": ["user"],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Get all user",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "$ref": "#/components/schemas/GetAllUserResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Users not found."
+          },
+          "500": {
+            "description": "Internal server error."
+          }
+        }
+      }
+    },
+    "/api/user/update": {
+      "patch": {
+        "summary": "Update your User",
+        "description": "Update your users",
+        "tags": ["user"],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateUser"
+              },
+              "examples": {
+                "register": {
+                  "value": {
+                    "name": "john doe",
+                    "avatar": "url .png"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Update your user",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "$ref": "#/components/schemas/UpdateResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error."
+          }
+        }
+      }
+    },
+    "/api/user/update-role/{id}": {
+      "patch": {
+        "summary": "Update Role",
+        "description": "Update role of user",
+        "tags": ["user"],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "id of user",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateRole"
+              },
+              "examples": {
+                "register": {
+                  "value": {
+                    "role": "1/0"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Update role of user",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "$ref": "#/components/schemas/UpdateResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error."
+          }
+        }
+      }
+    },
+    "/api/user/delete/{id}": {
+      "delete": {
+        "summary": "Delete User",
+        "description": "Delete user",
+        "tags": ["user"],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "id of user",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Delete user",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "$ref": "#/components/schemas/DeleteResponse"
                 }
               }
             }
@@ -333,6 +571,31 @@
         },
         "required": ["email"]
       },
+      "UploadAvatar": {
+        "type": "string",
+        "format": "binary"
+      },
+      "UpdateRole": {
+        "type": "object",
+        "properties": {
+          "role": {
+            "type": "integer",
+            "enum": [1, 0]
+          }
+        },
+        "required": ["role"]
+      },
+      "UpdateUser": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "avatar": {
+            "type": "string"
+          }
+        }
+      },
       "Register": {
         "type": "object",
         "properties": {
@@ -358,6 +621,69 @@
           }
         },
         "required": ["activation_token"]
+      },
+      "GetUserResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string",
+            "format": "email"
+          },
+          "avatar": {
+            "type": "string"
+          },
+          "created_at": {
+            "type": "string"
+          },
+          "updated_at": {
+            "type": "string"
+          }
+        }
+      },
+      "GetAllUserResponse": {
+        "type": "object",
+        "properties": {
+          "users": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GetUserResponse"
+            }
+          }
+        }
+      },
+      "UploadAvatarResponse": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string"
+          },
+          "avatar": {
+            "type": "string"
+          }
+        },
+        "required": ["message", "avatar"]
+      },
+      "UpdateResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "string"
+          }
+        }
+      },
+      "DeleteResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "string"
+          }
+        }
       },
       "RefreshTokenResponse": {
         "type": "object",
@@ -417,9 +743,10 @@
       }
     },
     "securitySchemes": {
-      "basicAuth": {
+      "bearerAuth": {
         "type": "http",
-        "scheme": "baisc"
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
       }
     }
   }

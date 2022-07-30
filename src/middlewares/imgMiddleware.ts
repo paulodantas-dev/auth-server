@@ -8,7 +8,7 @@ export const imgMiddleware = (req: Request, res: Response, next: NextFunction) =
     if (!req.files || Object.keys(req.files).length === 0)
       return res.status(400).json({ error: 'No files were uploaded.' });
 
-    const file = req.files.file as IFile;
+    const file = req.files?.file as IFile;
 
     if (file?.size > 1024 * 1024) {
       removeImgTmp(file?.tempFilePath);
