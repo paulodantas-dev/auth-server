@@ -2,7 +2,7 @@
 
 API - https://auth-app-node.herokuapp.com
 
-APP - Building
+APP - https://auth-client-paulodantas-dev.vercel.app/
 
 ## 🛠 Skills
 
@@ -73,29 +73,29 @@ To deploy this project, run
 
 For more details [Doc](https://auth-app-node.herokuapp.com/api/doc/)
 
-#### Returns user, token and sets cookie for user with refresh token
+#### Returns token and sets cookie for user with refresh token
 
 ```http
   post /api/login
 ```
 
-| BODY       | Tipo     | Descrição        |
+| BODY       | Type     | Description      |
 | :--------- | :------- | :--------------- |
-| `email`    | `string` | **Obrigatório**. |
-| `password` | `string` | **Obrigatório**. |
+| `email`    | `string` | **Mandatory**.   |
+| `password` | `string` | **Mandatory**.   |
 
-#### Returns user, token and sets cookie for user with refresh token
+#### send email with access token verification
 
 ```http
   post /api/register
 ```
 
-| BODY       | Tipo     | Descrição        |
-| :--------- | :------- | :--------------- |
-| `fullname` | `string` | **Obrigatório**. |
-| `username` | `string` | **Obrigatório**. |
-| `email`    | `string` | **Obrigatório**. |
-| `password` | `string` | **Obrigatório**. |
+| BODY       | Type     | Description    |
+| :--------- | :------- | :------------- |
+| `fullname` | `string` | **Mandatory**. |
+| `username` | `string` | **Mandatory**. |
+| `email`    | `string` | **Mandatory**. |
+| `password` | `string` | **Mandatory**. |
 
 #### Returns message with logout success and remove cookie with refresh token
 
@@ -103,11 +103,101 @@ For more details [Doc](https://auth-app-node.herokuapp.com/api/doc/)
   post /api/logout
 ```
 
-#### Returns user, token and sets cookie for user with refresh token
+#### Returns token
 
 ```http
   post /api/refresh_token
 ```
+
+#### Returns message account has been activated
+
+```http
+  post /api/activate
+```
+
+| BODY               | Type     | Description    |
+| :----------------  | :------- | :------------- |
+| `activation_token` | `string` | **Mandatory**. |
+
+
+#### Returns message and send email with password reset link
+
+```http
+  post /api/forgot-password
+```
+
+| BODY    | Type     | Description    |
+| :------ | :------- | :------------- |
+| `email` | `string` | **Mandatory**. |
+
+#### Returns message password successfully changed
+
+```http
+  post /api/reset-password
+```
+
+| BODY       | Type     | Description    |
+| :--------- | :------- | :------------- |
+| `password` | `string` | **Mandatory**. |
+
+#### Returns img url
+
+```http
+  post /api/upload-avatar
+```
+
+| BODY   | Type   | Description    |
+| :----- | :----- | :------------- |
+| `file` | `file` | **Mandatory**. |
+
+#### Returns your user
+
+```http
+  get /api/user
+```
+
+#### Returns all user
+
+```http
+  get /api/user/all
+```
+
+#### Returns message update user success
+
+```http
+  patch /api/user/update
+```
+
+| BODY       | Type     | Description    |
+| :--------- | :------- | :------------- |
+| `name`     | `string` | **Optional**.  |
+| `avatar`   | `string` | **Optional**.  |
+
+#### Returns message update role success
+
+```http
+  patch /api/user/update-role/:id
+```
+
+| BODY       | Type     | Description    |
+| :--------- | :------- | :------------- |
+| `role`     | `string` | **Mandatory**. |
+
+| PARAMS     | Type     | Description    |
+| :--------- | :------- | :------------- |
+| `id`       | `string` | **Mandatory**. |
+
+#### Returns message update role success
+
+```http
+  patch /api/user/delete/:id
+```
+
+| PARAMS     | Type     | Description    |
+| :--------- | :------- | :------------- |
+| `id`       | `string` | **Mandatory**. |
+
+
 
 ## Feedback
 
